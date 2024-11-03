@@ -8,7 +8,8 @@ module Pennylane
         Customer.object_name => Customer,
         CustomerInvoice.object_name => CustomerInvoice,
         Product.object_name => Product,
-        Supplier.object_name => Supplier
+        Supplier.object_name => Supplier,
+        SupplierInvoice.object_name => SupplierInvoice
       }.freeze
     end
   end
