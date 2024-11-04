@@ -17,7 +17,7 @@ module Pennylane
 
       def update params, opts = {}
         request_pennylane_object(method: :put, path: "/suppliers", params: { body: { object_name => params } }, opts: opts)
-      
+      end
     end
   end
 end
