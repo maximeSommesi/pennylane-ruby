@@ -1,262 +1,31 @@
-# Pennylane Ruby Library
+# Pennylane::Ruby
 
-The Pennylane Ruby library provides convenient access to the Pennylane API from applications written in the Ruby language. It includes a pre-defined set of classes for API resources that initialize themselves dynamically from API responses which makes it compatible with a wide range of versions of the Pennylane API.
-It only works with the [buys and sales API](https://pennylane.readme.io/reference/versioning).
+TODO: Delete this and the text below, and describe your gem
 
-It was inspired by the [Stripe Ruby library](https://github.com/stripe/stripe-ruby).
-
-
-## Documentation
-See the [Pennylane API](https://pennylane.readme.io/reference/versioning) docs.
+Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/pennylane/ruby`. To experiment with that code, run `bin/console` for an interactive prompt.
 
 ## Installation
 
+TODO: Replace `UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG` with your gem name right after releasing it to RubyGems.org. Please do not do it earlier due to security reasons. Alternatively, replace this section with instructions to install your gem from git if you don't plan to release to RubyGems.org.
+
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add pennylane
+    $ bundle add UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
 
 If bundler is not being used to manage dependencies, install the gem by executing:
-```ruby
-# Add to gemfile
-gem 'pennylane'
-```
 
-For Rails app :
-```ruby
-# Create initializers/pennylane.rb
-Pennylane.api_key = Rails.application.credentials.dig(:pennylane, :api_key)
-
-# Add credentials to config/credentials.yml.enc
-$ EDITOR=vim bin/rails credentials:edit
-
-pennylane:
-  api_key: 'x0fd....'
-```
-## Requirements
-Ruby 2.3+.
+    $ gem install UPDATE_WITH_YOUR_GEM_NAME_PRIOR_TO_RELEASE_TO_RUBYGEMS_ORG
 
 ## Usage
 
-The library needs to be configured with your account's token api which is available in your Pennylane Settings. Set `Pennylane.api_key` to its value:
-
-```ruby
-require 'pennylane'
-Pennylane.api_key = 'x0fd....'
-
-# list customers
-Pennylane::Customer.list
-```
-
-### Customers ([API Doc](https://pennylane.readme.io/reference/customers-post-1))
-
-```ruby
-# filter and paginate customers
-Pennylane::Customer.list(filter: [{field: 'name', operator: 'eq', value: 'Apple'}], page: 2)
-
-# Retrieve single customer
-Pennylane::Customer.retrieve('38a1f19a-256d-4692-a8fe-0a16403f59ff')
-
-# Update a customer
-cus = Pennylane::Customer.retrieve('38a1f19a-256d-4692-a8fe-0a16403f59ff')
-cus.update(name: 'Apple Inc')
-
-# Create a customer
-Pennylane::Customer.create customer_type: 'company', name: 'Tesla', address: '4 rue du faubourg', postal_code: '75008', city: 'Paris', country_alpha2: 'FR'
-```
-
-### CustomerInvoices ([API Doc](https://pennylane.readme.io/reference/customer_invoices-import-1))
-
-```ruby
-# Create a customer invoice
-Pennylane::CustomerInvoice.create(
-  create_customer: true,
-  create_products: true,
-  invoice: {
-    date: '2021-01-01',
-    deadline: '2021-01-31',
-    customer: {
-      name: 'Tesla',
-      customer_type: 'company',
-      address: '4 rue du faubourg',
-      postal_code: '75001',
-      city: 'Paris',
-      country_alpha2: 'FR',
-      emails: ['stephane@tesla.com'] },
-    line_items: [
-      {
-        description: 'Consulting',
-        quantity: 1,
-        unit_price: 1000
-      }
-    ]
-  }
-)
-
-# List customer invoices
-Pennylane::CustomerInvoice.list
-
-# Retrieve a customer invoice
-invoice = Pennylane::CustomerInvoice.retrieve('38a1f19a-256d-4692-a8fe-0a16403f59ff')
-
-# Finalize a customer invoice
-invoice.finalize
-
-# Send a customer invoice
-invoice.send_by_email
-
-# Mark a customer invoice as paid
-invoice.mark_as_paid
-
-# Link an invoice and a credit note
-credit_note = Pennylane::CustomerInvoice.retrieve('some-credit-note-id')
-Pennylane::CustomerInvoice.links(invoice.quote_group_uuid, credit_note.quote_group_uuid)
-
-# Import a customer invoice
-Pennylane::CustomerInvoice.import(file: Util.file(File.expand_path('../fixtures/files/invoice.pdf', __FILE__)),
-                                  create_customer: true,
-                                  invoice: { date: Date.today, deadline: Date.today >> 1,
-                                             customer: {
-                                               name: 'Tesla',
-                                               customer_type: 'company',
-                                               address: '4 rue du faubourg',
-                                               postal_code: '75001',
-                                               city: 'Paris',
-                                               country_alpha2: 'FR',
-                                               emails: ['stephane@tesla.com'] },
-                                             line_items: [
-                                               {
-                                                 description: 'Consulting',
-                                                 quantity: 1,
-                                                 unit_price: 1000
-                                               }
-                                             ]
-                                  }
-)
-```
-### Suppliers ([API Doc](https://pennylane.readme.io/reference/suppliers-post))
-
-```ruby
-# Create a supplier
-Pennylane::Supplier.create(name: 'Apple Inc', address: '4 rue du faubourg', postal_code: '75008', city: 'Paris', country_alpha2: 'FR')
-
-# Retrieve a supplier
-Pennylane::Supplier.retrieve('supplier_id')
-
-# List all suppliers
-Pennylane::Supplier.list
-```
-
-### Products ([API Doc](https://pennylane.readme.io/reference/products-post-1))
-
-```ruby
-# Create a product
-Pennylane::Product.create(label: 'Macbook Pro', unit: 'piece', price: 2_999, vat_rate: 'FR_200', currency: 'EUR')
-
-# List all products
-Pennylane::Product.list
-
-# Retrieve a product
-product = Pennylane::Product.retrieve('product_id')
-
-# Update a product
-product.update(label: 'Macbook Pro 2021')
-```
-
-### Categories ([API Doc](https://pennylane.readme.io/reference/tags-get))
-
-```ruby
-# Create a category
-Pennylane::Category.create(name: 'IT')
-
-# Retrieve a category
-Pennylane::Category.retrieve('category_id')
-
-# List all categories
-Pennylane::Category.list
-
-# Update a category
-category = Pennylane::Category.retrieve('category_id')
-category.update(name: 'IT Services')
-```
-### CategoryGroups ([API Doc](https://pennylane.readme.io/reference/tag-groups-get))
-```ruby
-# List all category groups
-Pennylane::CategoryGroup.list
-```
-
-### Per-request api key
-For apps that need to use multiple keys during the lifetime of a process. it's also possible to set a per-request key:
-```ruby
-require "pennylane"
-
-Pennylane::Customer.list(
-  {},
-  {
-    api_key: 'x1fa....'
-  }
-)
-
-Pennylane::Customer.retrieve(
-  '38a1f19a-256d-4692-a8fe-0a16403f59ff',
-  {
-    api_key: 'x1fa....'
-  }
-)
-
-```
-### Accessing resource properties
-
-Both indexer and accessors can be used to retrieve values of resource properties.
-
-```ruby
-customer = Pennylane::Customer.retrieve('customer_id')
-puts customer['name']
-puts customer.name
-
-# NOTE: To do this the gem will try to guess the key of the resource.
-# Otherwise we will have to do Pennylane::Customer.retrieve('customer_id').customer.name
-# We rely on `method_missing` to do Pennylane::Customer.retrieve('customer_id').name
-```
-
-## Test mode
-Pennylane provide a [test environment](https://help.pennylane.com/fr/articles/18773-creer-un-environnement-de-test). You can use the library with your test token api by setting the `Pennylane.api_key` to its value.
-
+TODO: Write usage instructions here
 
 ## Development
 
-```bash
-bundle install
-bundle exec rake test
-```
+After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-Resources implemented so far :
-### CUSTOMER INVOICING
-
-- Customer Invoices ✅
-- Estimates 🚧
-- Billing Subscriptions 🚧
-
-### REFERENTIALS
-
-- Customers ✅
-- Suppliers ✅
-- Categories ✅
-- CategoryGroups ✅
-- Products ✅
-- Plan Items 🚧
-- Enums 🚧
-
-### SUPPLIER INVOICING
-- Supplier Invoices 🚧
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/sbounmy/pennylane. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [code of conduct](https://github.com/[USERNAME]/pennylane/blob/main/CODE_OF_CONDUCT.md).
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the Pennylane project's codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/pennylane/blob/main/CODE_OF_CONDUCT.md).
+Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/pennylane-ruby.

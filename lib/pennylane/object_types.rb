@@ -9,7 +9,8 @@ module Pennylane
         CustomerInvoice.object_name => CustomerInvoice,
         Product.object_name => Product,
         Supplier.object_name => Supplier,
-        SupplierInvoice.object_name => SupplierInvoice
+        SupplierInvoice.object_name => SupplierInvoice,
+        PlanItem.object_name => PlanItem
       }.freeze
     end
   end
