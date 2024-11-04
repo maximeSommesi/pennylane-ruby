@@ -15,6 +15,9 @@ module Pennylane
         request_pennylane_object(method: :post, path: "/suppliers", params: { body: { object_name => params } }, opts: opts)
       end
 
+      def update params, opts = {}
+        request_pennylane_object(method: :put, path: "/suppliers", params: { body: { object_name => params } }, opts: opts)
+      
     end
   end
 end
