@@ -28,15 +28,6 @@ module Pennylane
         request_pennylane_object(method: :post, path: "/customer_invoices/links", params: { body: { quote_group_uuids: quote_group_uuids } },
                                                                                 opts: {})
       end
-
-      def update(attributes)
-        resp, opts = self.class.request_pennylane_object(method: :put,
-                                                       path: "/customer_invoices/#{id}",
-                                                       params: { body: { 'invoice' => attributes } },
-                                                       opts: {}, with: { invoice: 'customer_invoice' })
-        @values = resp.instance_variable_get :@values
-        self
-      end
     end
 
     # since object name is different from the class name, we need to override the object_name method
