@@ -20,13 +20,16 @@ module Pennylane
     def initialize(api_key: nil, api_version: 'v1')
       @api_key = api_key
       @api_version = api_version || 'v1'
-      validate!
     end
 
     def validate!
       raise ConfigurationError, "API key manquante" if api_key.nil?
       raise ConfigurationError, "Version d'API invalide" unless api_version.match?(/\Av\d+\z/)
       true
+    end
+
+    def configured?
+      !api_key.nil?
     end
   end
 end

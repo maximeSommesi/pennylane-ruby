@@ -53,7 +53,7 @@ module Pennylane
     end
 
     def configured?
-      configuration.api_key.present?
+      configuration.configured?
     end
   end
 end

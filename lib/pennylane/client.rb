@@ -34,7 +34,8 @@ module Pennylane
       Net::HTTP.const_get(method.to_s.capitalize)
     end
 
-    def request method, path, params: {}, opts: {}
+    def request(method, path, params: {}, opts: {})
+      validate_configuration!
       req = initialize_request(method, path, params[:query], opts).tap do |req|
         req.body = params[:body].to_json if params[:body]
       end
@@ -45,6 +46,13 @@ module Pennylane
     end
 
     private
+
+    def validate_configuration!
+      return if @key
+      config = Pennylane::Configuration.current
+      config.validate!
+      @key ||= config.api_key
+    end
 
     def handle_error_response(resp)
       case resp.code.to_i
