@@ -26,5 +26,34 @@ module Pennylane
   class << self
     extend Forwardable
     def_delegators :@config, :api_key, :api_key=
+
+    def configure
+      yield(Configuration.current)
+    end
+
+    def configuration
+      Configuration.current
+    end
+
+    def api_key
+      configuration.api_key
+    end
+
+    def with_configuration(config)
+      raise ArgumentError, "Un bloc est requis" unless block_given?
+      original = Configuration.current
+      Configuration.current = config
+      yield
+    ensure
+      Configuration.current = original
+    end
+
+    def reset_configuration!
+      Configuration.reset!
+    end
+
+    def configured?
+      configuration.api_key.present?
+    end
   end
 end

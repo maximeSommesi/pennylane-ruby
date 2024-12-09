@@ -3,11 +3,11 @@ module Pennylane
     BASE_URI = 'app.pennylane.com/api/external'.freeze
     VERSION = 'v1'.freeze
 
-    attr_accessor :version
+    attr_accessor :version, :key
 
-    def initialize(key, version: 'v1')
-      @key = key
-      @version = version
+    def initialize(key = nil, version: 'v1')
+      @key = key || Pennylane::Configuration.current.api_key
+      @version = version || Pennylane::Configuration.current.api_version
     end
 
     def url(path, query={})
