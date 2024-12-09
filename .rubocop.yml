@@ -1,4 +1,4 @@
-AllCops:
+  AllCops:
   TargetRubyVersion: 2.6
 
 Style/StringLiterals:
@@ -11,3 +11,4 @@ Style/StringLiteralsInInterpolation:
 
 Layout/LineLength:
   Max: 120
+  AllowConsecutiveConditionals: true  
